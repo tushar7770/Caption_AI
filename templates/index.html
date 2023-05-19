@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caption.ai</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='dist/css/output.css')}}">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+    <script>
+        var loadFile = function (event) {
+            var output = document.getElementById('uploaded');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function () {
+                URL.revokeObjectURL(output.src) // free memory
+            }
+        };
+    </script>
+</head>
+
+<body>
+
+    <div class="bg-cover" style="background-image: url('./static/Desktop.png'); height: 1024px">
+        <div class="relative isolate px-6 pt-14 lg:px-8">
+
+
+            <div class="mx-auto max-w-2xl">
+                <div class="text-center">
+                    <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Caption AI
+                    </h1>
+                    <p class="mt-6 text-lg leading-8 text-gray-600">"Elevate Your Content".</p>
+                </div>
+            </div>
+
+            <div class="mx-auto mt-10 max-w-6xl">
+                <form action="/caption" method="post" enctype="multipart/form-data">
+
+                    <div class="flex items-center justify-between gap-5">
+                        <div class="min-w-[270px]">
+                            <label class="block mb-2 font-medium text-gray-900" for="file_input">Upload file</label>
+                            <input onchange="loadFile(event)" name="file"
+                                class="relative m-0 block w-full min-w-0 flex-auto rounded-full border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-gray-100/60 file:px-5 file:py-3 file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-indigo-600 hover:file:text-white focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
+                                id="file_input" type="file" required>
+                            <p class="mt-2 text-sm text-gray-500" id="file_input_help">SVG, PNG, JPG, WEBP etc.</p>
+                        </div>
+
+                        <button type="submit"
+                            class="bg-indigo-600 hover:shadow-2xl transition-all duration-300 ease-in-out py-3 px-8 text-white rounded-full">Generate
+                            Captions</button>
+                    </div>
+                </form>
+
+                <div class="flex gap-5 mt-10">
+                    <div class="border rounded-xl w-full min-h-[400px] " style="max-height: 600px;">
+                        {% if image is defined and image|length > 0 %}
+                        <img src="data:image/png;base64,{{ image }}" alt=""
+                            class="w-full h-full object-cover rounded-lg">
+                        {% else %}
+                        <img id="uploaded" alt="" class="w-full h-full object-cover rounded-lg">
+                        {% endif %}
+                    </div>
+                    <div class="relative group border rounded-xl w-full min-h-[400px]" style="max-height: 600px;">
+                        {% if captions is defined and captions|length > 0 %}
+                        <p class="w-full h-full flex items-center justify-center text-center text-gray-700"
+                            style="white-space: pre-line;">
+                            {{ captions }}
+                        </p>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+
+</html>
